@@ -1,0 +1,7 @@
+venv/
+media/
+static/
+*.py[c]
+client_hotel_reservation/migrations/*.py
+!*/migrations/init.py
+db.sqlite3
