@@ -6,7 +6,7 @@ from real_estate_api.models.property_model import Property
 from real_estate_api.validators.user_helper import UserHelper
 
 class CreatePropertyAPI(APIView):
-    def get(self,request):  
+    def post(self,request):  
         errors = UserHelper.validate_user(self,request)
 
         if errors:
@@ -15,6 +15,9 @@ class CreatePropertyAPI(APIView):
         serializer = CreatePropertySerializer(data = request.data)
 
         if serializer.is_valid():
+            features_list = request.data.get('features', [])
+            features = ",".join(features_list)
+
             property = Property.objects.create(
             property_name= request.data['property_name'],   
             location= request.data['location'],   
@@ -25,9 +28,10 @@ class CreatePropertyAPI(APIView):
             no_of_grid= request.data['no_of_grid'],   
             no_of_garage= request.data['no_of_garage'],   
             posted_date= request.data['posted_date'],   
-            features=request.data['features'],   
+            price= request.data['price'],   
+            price_per_sqm= request.data['price_per_sqm'],   
+            features=features,   
             )
-            property.save()
             return Response({'message': 'Success', 'data': serializer.data}, status=status.HTTP_201_CREATED)
         else:
             return Response({'message': 'Failed', 'message': 'Please Recheck Input','data': serializer.data}, status=status.HTTP_400_BAD_REQUEST)
